@@ -1,6 +1,7 @@
 package subsumption;
 
 import lejos.robotics.navigation.MovePilot;
+import lejos.utility.Delay;
 import sensors.Sensor;
 
 public class RightHit implements Task {
@@ -24,6 +25,8 @@ public class RightHit implements Task {
 		//pilot.forward();
 		//Delay.msDelay(250);
 		//pilot.stop();
-		pilot.rotate(30);
+		pilot.forward();
+		Delay.msDelay(100);
+		pilot.rotate(25);
 	}
 }

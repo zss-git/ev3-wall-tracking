@@ -26,8 +26,6 @@ public class BothHit implements Task {
 		//Forward is backward
 		pilot.forward();
 		Delay.msDelay(700);
-		pilot.stop();
-		pilot.stop();
 		pilot.rotate(60);
 	}
 }

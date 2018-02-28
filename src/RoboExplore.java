@@ -10,6 +10,7 @@ import sensors.Sensor;
 import subsumption.BothHit;
 import subsumption.GoForward;
 import subsumption.LeftHit;
+import subsumption.LookForWall;
 import subsumption.RightHit;
 import subsumption.Task;
 
@@ -24,6 +25,7 @@ public class RoboExplore {
 	private Task bothHit;
 	private Task leftHit;
 	private Task rightHit;
+	private Task lookForWall;
 	
 	private Task goForward;
 	
@@ -43,11 +45,14 @@ public class RoboExplore {
 		bothHit = new BothHit(leftBump, rightBump, pilot);
 		leftHit = new LeftHit(leftBump, pilot);
 		rightHit = new RightHit(rightBump, pilot);
+		lookForWall = new LookForWall(pilot);
 		
 		goForward = new GoForward(pilot);
 	}
 	
 	public void mainLoop() {
+		int ticksSinceLastReset = 0;
+		
 		while(true) {	
 			// ~ 30HZ sample rate
 			Delay.msDelay(33);
@@ -60,14 +65,22 @@ public class RoboExplore {
 				//Evade both
 				curTask = bothHit;
 				taskString = "Evading left + right";
+				ticksSinceLastReset = 0;
 			}
 			else if(leftHit.getVal() == 1) {
 				curTask = leftHit;
 				taskString = "Evading left";
+				ticksSinceLastReset = 0;
 			}
 			else if(rightHit.getVal() == 1) {
 				curTask = rightHit;
 				taskString = "Evading right";
+				ticksSinceLastReset = 0;
+			}
+			else if(ticksSinceLastReset > 30) {
+				curTask = lookForWall;
+				taskString = "Looking for wall";
+				ticksSinceLastReset = 0;
 			}
 			else {
 				curTask = goForward;
@@ -81,6 +94,8 @@ public class RoboExplore {
 			if(curTask != null) {
 				curTask.executeOutputs();
 			}
+			
+			ticksSinceLastReset++;
 		}
 	}
 		
